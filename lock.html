@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>手势|密码</title>
+    <link rel="stylesheet" href="./css/lock.css">
+</head>
+
+<body>
+    <div id='mode'>
+    </div>
+    <div class="header">手势密码</div>
+    <div id="lock">
+        <canvas id="canvas"></canvas>
+        <div id="result">
+        </div>
+        <div class='radio'>
+            <label for="setupPsw">
+                <input type="radio" name="operationType" value='setupPsw'>&nbsp;&nbsp;<span>设置密码</span>
+            </label>
+        </div>
+        <div class="radio">
+            <label for="verificatePsw">
+                <input type="radio" name="operationType" value="verificatePsw">&nbsp;&nbsp;<span>验证密码</span>
+            </label>
+        </div>
+    </div>
+    <!-- <div class="g-ft">
+        copyright@胡芳燚
+    </div> -->
+    <script src="./js/lock.js"></script>
+    <script>
+    window.onload = function() {
+        var lock = new Lock();
+        lock.init();
+    }
+    </script>
+</body>
+
+</html>

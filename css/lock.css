@@ -1,0 +1,133 @@
+  * {
+      margin: 0;
+      padding: 0;
+  }
+  
+  body {
+      background-color: #EEE;
+      height: 100%;
+      width: 100%;
+  }
+  
+  #mode {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1000;
+      opacity: 0.2;
+      background-color: grey;
+      display: none;
+  }
+  
+  .header {
+      color: #00F;
+      line-height: 8vh;
+      height: 8vh;
+      font-size: 6vh;
+      text-align: center;
+      background-image: -webkit-linear-gradient(left, #c90 0%, #0c3 50%, #c30 100%);
+      border-bottom: 1px solid #999;
+  }
+  
+  #lock {
+      width: 80vw;
+      height: 80vh;
+      margin: 0vh auto 5vh;
+  }
+  
+  #result {
+      font-size: 6vw;
+      left: 40vw;
+      position: relative;
+      width: 80vw;
+      height: auto;
+      margin-left: -40vw;
+      text-align: center;
+  }
+  
+  .error {
+      color: red;
+      -webkit-animation: mymove 0.8s;
+      -o-animation: mymove 0.8s;
+      -moz-animation: mymove 0.8s;
+      animation: mymove 0.8s;
+  }
+  
+  .radio {
+      font-size: 4.5vw;
+      margin: 5vh 0 0 12vw;
+  }
+  
+  @-webkit-keyframes mymove {
+      0% {
+          left: 38vw;
+      }
+      25% {
+          left: 42vw;
+      }
+      50% {
+          left: 38vw;
+      }
+      75% {
+          left: 42vw;
+      }
+      100% {
+          left: 40vw;
+      }
+  }
+  
+  @-o-keyframes mymove {
+      0% {
+          left: 38vw;
+      }
+      25% {
+          left: 42vw;
+      }
+      50% {
+          left: 38vw;
+      }
+      75% {
+          left: 42vw;
+      }
+      100% {
+          left: 40vw;
+      }
+  }
+  
+  @-moz-keyframes mymove {
+      0% {
+          left: 38vw;
+      }
+      25% {
+          left: 42vw;
+      }
+      50% {
+          left: 38vw;
+      }
+      75% {
+          left: 42vw;
+      }
+      100% {
+          left: 40vw;
+      }
+  }
+  
+  @keyframes mymove {
+      0% {
+          left: 38vw;
+      }
+      25% {
+          left: 42vw;
+      }
+      50% {
+          left: 38vw;
+      }
+      75% {
+          left: 42vw;
+      }
+      100% {
+          left: 40vw;
+      }
+  }

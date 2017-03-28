@@ -307,7 +307,9 @@ var propertys = {
     handleConfirmResetPsw: function() {
         this.handleLocalStorage('remove', 'password');
         this.getDom('#prompt').style.display = 'none';
+        this.chance = 3;
         this.resultDom.innerHTML = '请重新设置手势密码';
+        this.resultDom.className = '';
     },
     handleCancleResetPsw: function() {
         this.getDom('#prompt').style.display = 'none';
@@ -316,10 +318,11 @@ var propertys = {
     },
     handleRepaint: function() {
         this.step = 1;
+        this.initialCircle();
         this.handleLocalStorage('remove', 'psw1');
         this.resultDom.innerHTML = '请重新设置手势密码';
-        this.resultDom.className = '';
         this.getDom('#repaint').style.display = 'none';
+        this.resultDom.className = '';
     },
     /* 
          parameter:事件对象
@@ -437,7 +440,7 @@ var propertys = {
                     this.handleResult(str, this.circleStyle.correct, this.lineStyle.correct);
                 } else {
                     this.resultDom.className = 'error';
-                    var str = '两次密码不一致，重新输入!';
+                    var str = '两次输入不一致，请重试!';
                     this.handleResult(str, this.circleStyle.error, this.lineStyle.error);
                 }
             }

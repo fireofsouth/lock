@@ -16,13 +16,32 @@ https://fireofsouth.github.io/lock/lock.html
 主要采用对象封装,所用方法写入原型链中  
 ### 初始化  
 - 初始dom元素
-- 计算每个圆心的坐标存入数组中  
+- 计算每个圆心的坐标存入数组中,根绝canvas宽度分为7个圆其中3个为需要显示的圆  
+```javascript  
+ var index = 0;
+        var n = 3; //每行有三个点
+        this.r = this.canvas.width / (2 + 4 * n);
+        for (var i = 0; i < n; i++) {
+            for (var j = 0; j < n; j++) {
+                index++;
+                var pointObj = {
+                    x: j * 4 * this.r + 3 * this.r,
+                    y: i * 4 * this.r + 3 * this.r,
+                    index: index
+                }
+                this.centerPoint.push(pointObj);
+                this.lastPoint.push(pointObj);
+            }
+        }
+```  
+
 - 设置不通状态下的圆形和线的对象  
 - 根据初始坐标点画出初始密码点  
 - 初始化事件绑定  
 ### 画图  
-- 一个基本画圆和基本划线函数以便调用,如画圆:  
+- 画圆和画线基本函数传入点和样式进行绘画，多点绘画即可调用基本函数进行绘画,如画圆:  
 ```javascript  
+      drawCircle: function(x, y, circleStyle) {
         this.ctx.strokeStyle = circleStyle.strokeStyle;
         this.ctx.fillStyle = circleStyle.fillStyle;
         this.ctx.lineWidth = 3;
@@ -31,6 +50,12 @@ https://fireofsouth.github.io/lock/lock.html
         this.ctx.closePath();
         this.ctx.stroke();
         this.ctx.fill();
+    },
+        drawAcrossCircle: function(point, circleStyle) {
+        point.forEach(function(item, i) {
+            this.drawCircle(item.x, item.y, circleStyle);
+        }.bind(this));
+    },
 ```  
 
 - 得到划过的点调用基本函数画出手势密码

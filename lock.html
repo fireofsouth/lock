@@ -3,7 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="keywords" content="lock" />
+    <meta name="description" content="This is a sliding unlock component" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="author" contect="hufangyi, 18810210126@163.com" />
     <title>手势|密码</title>
     <link rel="stylesheet" href="./css/lock.css">
 </head>
@@ -17,8 +22,8 @@
         <div class="prompt-content">
             <p id='title'>重新设置密码?</p>
             <p>
-                <button id='confirm'>是</button>
-                <button id='cancel'>否</button>
+                <button type='button' id='confirm'>是</button>
+                <button type='button' id='cancel'>否</button>
             </p>
         </div>
     </div>
@@ -31,12 +36,12 @@
         </div>
         <div class='radio'>
             <label for="setupPsw">
-                <input type="radio" name="operationType" value='setupPsw'>&nbsp;&nbsp;<span>设置密码</span><a href='#' id='repaint'>重绘</a>
+                <input type="radio" name="operationType" value='setupPsw' id='setupPsw'>&nbsp;&nbsp;<span>设置密码</span><a href='#' id='repaint'>重绘</a>
             </label>
         </div>
         <div class="radio">
             <label for="verificatePsw">
-                <input type="radio" name="operationType" value="verificatePsw">&nbsp;&nbsp;<span>验证密码</span>
+                <input type="radio" name="operationType" value="verificatePsw" id='verificatePsw'>&nbsp;&nbsp;<span>验证密码</span>
             </label>
         </div>
     </div>

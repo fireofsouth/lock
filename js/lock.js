@@ -289,6 +289,11 @@ var propertys = {
         this.repaintEvent = this.handleRepaint.bind(this);
         this.EventUtil.addHandler(repaintDom, 'click', this.repaintEvent);
     },
+    /* 
+        parameter:无
+        return: 无
+        function: 选择验证操作处理函数
+    */
     handleVerificatePsw: function() {
         if (!this.handleLocalStorage('get', 'password')) {
             this.resultDom.innerHTML = '设置密码后，再验证';
@@ -297,6 +302,11 @@ var propertys = {
             return;
         }
     },
+    /* 
+        parameter:无
+        return: 无
+        function: 选择设置操作处理函数
+    */
     handleSetupPsw: function() {
         if (this.handleLocalStorage('get', 'password')) {
             this.getDom('#prompt').style.display = 'block';
@@ -304,6 +314,11 @@ var propertys = {
             return;
         }
     },
+    /* 
+        parameter:无
+        return: 无
+        function: 确定重新设置密码
+    */
     handleConfirmResetPsw: function() {
         this.handleLocalStorage('remove', 'password');
         this.getDom('#prompt').style.display = 'none';
@@ -311,11 +326,21 @@ var propertys = {
         this.resultDom.innerHTML = '请重新设置手势密码';
         this.resultDom.className = '';
     },
+    /* 
+        parameter:无
+        return: 无
+        function: 取消重新设置密码
+    */
     handleCancleResetPsw: function() {
         this.getDom('#prompt').style.display = 'none';
         this.setOperationType(1);
         this.resultDom.innerHTML = '请验证手势密码';
     },
+    /* 
+        parameter:无
+        return: 无
+        function: 重绘手势密码
+    */
     handleRepaint: function() {
         this.step = 1;
         this.initialCircle();
@@ -485,7 +510,7 @@ var propertys = {
         this.drawAcrossLine(lineStyle);
         this.timer = setTimeout(function() {
             this.initialCircle()
-        }.bind(this), 3000);
+        }.bind(this), 2000);
 
     },
     /* 

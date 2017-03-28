@@ -201,7 +201,7 @@ var propertys = {
     drawCircle: function(x, y, circleStyle) {
         this.ctx.strokeStyle = circleStyle.strokeStyle;
         this.ctx.fillStyle = circleStyle.fillStyle;
-        this.ctx.lineWidth = 2;
+        this.ctx.lineWidth = 3;
         this.ctx.beginPath();
         this.ctx.arc(x, y, this.r, 0, Math.PI * 2, true);
         this.ctx.closePath();

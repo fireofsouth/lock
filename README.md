@@ -22,6 +22,7 @@ https://fireofsouth.github.io/lock/lock.html
 - 初始化事件绑定  
 ### 画图  
 - 一个基本画圆和基本划线函数以便调用,如画圆:  
+```javascript  
         this.ctx.strokeStyle = circleStyle.strokeStyle;
         this.ctx.fillStyle = circleStyle.fillStyle;
         this.ctx.lineWidth = 3;
@@ -30,8 +31,6 @@ https://fireofsouth.github.io/lock/lock.html
         this.ctx.closePath();
         this.ctx.stroke();
         this.ctx.fill();
-```javascript  
-
 ```  
 
 - 得到划过的点调用基本函数画出手势密码

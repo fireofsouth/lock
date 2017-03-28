@@ -1,8 +1,7 @@
 var Lock = function() {
-
-    this.startLock = false;
+    this.startLock = false; //判断是否开始触摸密码点
     this.step = 1; //判断设置密码是第几步
-    this.timer = null; //定时器成功或者失败再5秒后或者再次输入时会初始化
+    this.timer = null; //定时器成功或者失败保持3秒后或者再次输入时会初始化
     this.chance = 3; //3次输入密码的机会
     /* 事件对象：兼容浏览器的事件方法 */
     this.EventUtil = {
@@ -49,19 +48,27 @@ var Lock = function() {
 
 }
 var propertys = {
-    //初始化
+    /* 
+        parameter:无
+        return: 无
+        function: 主函数,进行一系列初始化和事件绑定
+    */
     init: function() {
-        this.initDom();
         this.setting();
+        this.initDom();
         this.setCoordinate();
         this.initialCircle();
         this.bindEvent();
 
     },
-    //初始Dom和操作类型
+    /* 
+        parameter:无
+        return: 无
+        function: 初始化所需DOM元素
+    */
     initDom: function() {
         var oDiv = this.getDom('#lock');
-        var resultDom = this.getDom('#result');
+        this.resultDom = this.getDom('#result');
         this.canvas = this.getDom('#canvas');
         this.ctx = this.canvas.getContext('2d');
         this.canvas.height = oDiv.offsetWidth;
@@ -69,12 +76,17 @@ var propertys = {
         var password = window.localStorage.getItem('password') || null;
         if (password) {
             this.setOperationType(1);
-            resultDom.innerHTML = '请输入手势密码';
+            this.resultDom.innerHTML = '请验证手势密码';
         } else {
             this.setOperationType(0);
-            resultDom.innerHTML = '请设置手势密码';
+            this.resultDom.innerHTML = '请设置手势密码';
         }
     },
+    /* 
+        parameter:DOM匹配符
+        return: DOM节点
+        function: 获取DOM节点
+    */
     getDom: function(str) {
         var type = str.substr(0, 1);
         switch (type) {
@@ -90,10 +102,16 @@ var propertys = {
                 break;
         }
     },
+    /* 
+        parameter:无
+        return: 无
+        function: 设置所需要的数据
+    */
     setting: function() {
         this.centerPoint = [] //存放所有原点
         this.passwordPoint = []; //存放密码点
         this.lastPoint = []; //存放划过的剩余点
+        this.resultDom = this.getDom('#result'); //结果节点一次获取多次调用
         /*各个状态下圆的样式*/
         this.circleStyle = {
             'initial': {
@@ -119,7 +137,11 @@ var propertys = {
             'error': '#c00'
         };
     },
-    //将所有坐标点存在两个数组中;
+    /* 
+        parameter:无
+        return: 无
+        function: 生成每个密码点的坐标点
+    */
     setCoordinate: function() {
         var index = 0;
         var n = 3; //每行有三个点
@@ -137,13 +159,22 @@ var propertys = {
             }
         }
     },
-    //初始化每个原点
+    /* 
+        parameter:无
+        return: 无
+        function: 初始化面板中的密码点
+    */
     initialCircle: function() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.centerPoint.forEach(function(item, i) {
             this.drawCircle(item.x, item.y, this.circleStyle.initial);
         }.bind(this));
     },
+    /* 
+        parameter:无
+        return: 无
+        function: 得到当前对密码操作的类型
+    */
     getOperationType: function() {
         var oType = this.getDom("[operationType]");
         for (var i = 0; i < oType.length; i++) {
@@ -153,11 +184,20 @@ var propertys = {
         }
 
     },
+    /* 
+        parameter:类型序号
+        return: 无
+        function:设置当前操作类型
+    */
     setOperationType: function(num) {
         var oType = this.getDom("[operationType]");
         oType[num].checked = true;
     },
-    //画圆
+    /* 
+        parameter:x坐标,y坐标和画圆填充样式
+        return: 无
+        function: 画密码点
+    */
     drawCircle: function(x, y, circleStyle) {
         this.ctx.strokeStyle = circleStyle.strokeStyle;
         this.ctx.fillStyle = circleStyle.fillStyle;
@@ -168,13 +208,21 @@ var propertys = {
         this.ctx.stroke();
         this.ctx.fill();
     },
-    //画出划过圆的点
+    /* 
+        parameter:经过的密码点数组和对应样式
+        return: 无
+        function: 画出手势划过的密码点
+    */
     drawAcrossCircle: function(point, circleStyle) {
         point.forEach(function(item, i) {
             this.drawCircle(item.x, item.y, circleStyle);
         }.bind(this));
     },
-    //画手势密码划过的线
+    /* 
+         parameter:线填充样式，当前点坐标对象
+         return: 无
+         function: 画出经过的密码线
+     */
     drawAcrossLine: function(lineStyle, p) {
         this.ctx.strokeStyle = lineStyle;
         this.ctx.beginPath();
@@ -191,7 +239,11 @@ var propertys = {
         this.ctx.stroke();
         this.ctx.closePath();
     },
-    //得到在点在canvas中的相对位置
+    /* 
+        parameter:事件对象
+        return: 无
+        function: 当前手势在canvas中的相对位置
+    */
     getRelativePosition: function(event) {
         var event = this.EventUtil.getEvent(event);
         var rec = event.currentTarget.getBoundingClientRect();
@@ -201,19 +253,80 @@ var propertys = {
         };
         return relativePosition;
     },
-
+    /* 
+         parameter:无
+         return: 无
+         function: 手指滑动各步骤添加相应事件
+     */
 
     bindEvent: function() {
+        /*监听解锁事件*/
         this.startEvent = this.handleStart.bind(this);
-        this.moveEvent = this.handelMove.bind(this);
-        this.endEvent = this.handelEnd.bind(this);
-        // this.canvas.addEventListener('touchstart', this.startEvent, false);
+        this.moveEvent = this.handleMove.bind(this);
+        this.endEvent = this.handleEnd.bind(this);
         this.EventUtil.addHandler(this.canvas, 'touchstart', this.startEvent);
         this.EventUtil.addHandler(this.canvas, 'touchmove', this.moveEvent);
         this.EventUtil.addHandler(this.canvas, 'touchend', this.endEvent);
-        // this.canvas.addEventListener('touchmove', this.moveEvent, false);
-        // this.canvas.addEventListener('touchend', this.endEvent, false);
+
+        /*监听操作类型*/
+        var setupPswDom = this.getDom('[operationType]')[0];
+        var verificatePswDom = this.getDom('[operationType]')[1];
+        this.setupPswEvent = this.handleSetupPsw.bind(this);
+        this.VerificatePswEvent = this.handleVerificatePsw.bind(this);
+        this.EventUtil.addHandler(verificatePswDom, 'change', this.VerificatePswEvent);
+        this.EventUtil.addHandler(setupPswDom, 'change', this.setupPswEvent);
+
+        /*监听提示框选择*/
+        var confirmDom = this.getDom('#confirm');
+        var cancelDom = this.getDom('#cancel');
+        this.confirmResetPswEvent = this.handleConfirmResetPsw.bind(this);
+        this.cancleResetPswEvent = this.handleCancleResetPsw.bind(this);
+        this.EventUtil.addHandler(confirmDom, 'click', this.confirmResetPswEvent);
+        this.EventUtil.addHandler(cancelDom, 'click', this.cancleResetPswEvent);
+
+        /*监听重新绘制*/
+        var repaintDom = this.getDom('#repaint');
+        this.repaintEvent = this.handleRepaint.bind(this);
+        this.EventUtil.addHandler(repaintDom, 'click', this.repaintEvent);
     },
+    handleVerificatePsw: function() {
+        if (!this.handleLocalStorage('get', 'password')) {
+            this.resultDom.innerHTML = '设置密码后，再验证';
+            this.setOperationType(0);
+        } else {
+            return;
+        }
+    },
+    handleSetupPsw: function() {
+        if (this.handleLocalStorage('get', 'password')) {
+            this.getDom('#prompt').style.display = 'block';
+        } else {
+            return;
+        }
+    },
+    handleConfirmResetPsw: function() {
+        this.handleLocalStorage('remove', 'password');
+        this.getDom('#prompt').style.display = 'none';
+        this.resultDom.innerHTML = '请重新设置手势密码';
+    },
+    handleCancleResetPsw: function() {
+        this.getDom('#prompt').style.display = 'none';
+        this.setOperationType(1);
+        this.resultDom.innerHTML = '请验证手势密码';
+    },
+    handleRepaint: function() {
+        this.step = 1;
+        this.handleLocalStorage('remove', 'psw1');
+        this.resultDom.innerHTML = '请重新设置手势密码';
+        this.resultDom.className = '';
+        this.getDom('#repaint').style.display = 'none';
+    },
+    /* 
+         parameter:事件对象
+         return: 无
+         function: 手指刚触摸屏幕事件处理程序
+     */
+
     handleStart: function(event) {
         event = this.EventUtil.getEvent(event);
         this.EventUtil.preventDefault(event);
@@ -221,21 +334,31 @@ var propertys = {
         var p = this.getRelativePosition(event);
         this.centerPoint.forEach(function(item, i) {
             if (Math.abs(p.x - item.x) < this.r && Math.abs(p.y - item.y) < this.r) {
+                var password = this.handleLocalStorage('get', 'password');
                 this.startLock = true;
                 this.drawCircle(item.x, item.y, this.circleStyle.move);
                 this.passwordPoint.push(item);
                 this.lastPoint.splice(i, 1);
-
             }
 
-        }.bind(this))
+        }.bind(this));
     },
-    handelMove: function(event) {
+    /* 
+         parameter:事件对象
+         return: 无
+         function: 手指滑动屏幕事件处理程序
+     */
+    handleMove: function(event) {
         event = this.EventUtil.getEvent(event);
         if (this.startLock) {
             this.move(this.getRelativePosition(event));
         }
     },
+    /* 
+         parameter:当前坐标点
+         return: 无
+         function: 手指移动处理过程
+     */
     move: function(p) {
         this.initialCircle();
         this.drawAcrossCircle(this.passwordPoint, this.circleStyle.move)
@@ -249,13 +372,23 @@ var propertys = {
 
         }.bind(this))
     },
-    handelEnd: function() {
+    /* 
+         parameter:事件对象
+         return: 无
+         function: 手指离开屏幕事件处理程序
+     */
+    handleEnd: function() {
         if (this.startLock) {
             this.startLock = false;
             this.acrossResult();
         }
     },
-    handelLocalStorage: function(type, key, value) {
+    /* 
+         parameter:操作类型，键，值
+         return: 无
+         function: 封装LocalStroage操作函数
+     */
+    handleLocalStorage: function(type, key, value) {
         switch (type) {
             case 'set':
                 window.localStorage.setItem(key, value);
@@ -269,68 +402,94 @@ var propertys = {
 
         }
     },
+    /* 
+         parameter:无
+         return: 无
+         function: 滑动过后相应结果
+     */
     acrossResult: function() {
-        var resultDom = this.getDom('#result');
-        resultDom.innerHTML = '';
-        resultDom.className = '';
+
+        this.resultDom.innerHTML = '';
+        this.resultDom.className = '';
         var type = this.getOperationType();
-        var passwordStr = this.passwordObjToStr();
+        var passwordStr = this.passwordObjToStr(this.passwordPoint);
         if (this.passwordPoint.length < 4 && type == 'setupPsw' && this.step == 1) {
-            resultDom.innerHTML = '密码太短，至少需要4个点';
+            this.resultDom.innerHTML = '密码太短，至少需要4个点';
             this.initialCircle();
             return;
         }
         if (type == 'setupPsw') {
             if (this.step == 1) {
-                this.handelLocalStorage('set', 'psw1', passwordStr);
+                this.handleLocalStorage('set', 'psw1', passwordStr);
                 this.step++;
-                resultDom.innerHTML = '请确认手势密码';
+                this.getDom('#repaint').style.display = 'inline';
+                this.resultDom.innerHTML = '请确认手势密码';
                 this.initialCircle();
             } else if (this.step == 2) {
-                var psw1 = this.handelLocalStorage('get', 'psw1');
+                var psw1 = this.handleLocalStorage('get', 'psw1');
                 if (this.checkPassWord(psw1, passwordStr)) {
                     this.step = 1;
-                    this.handelLocalStorage('set', 'password', psw1);
-                    this.handelLocalStorage('remove', 'psw1');
+                    this.getDom('#repaint').style.display = 'none';
+                    this.handleLocalStorage('set', 'password', psw1);
+                    this.handleLocalStorage('remove', 'psw1');
+                    this.setOperationType(1);
                     var str = '密码设置成功!';
-                    this.handelResult(str, this.circleStyle.correct, this.lineStyle.correct);
+                    this.handleResult(str, this.circleStyle.correct, this.lineStyle.correct);
                 } else {
-                    resultDom.className = 'error';
+                    this.resultDom.className = 'error';
                     var str = '两次密码不一致，重新输入!';
-                    this.handelResult(str, this.circleStyle.error, this.lineStyle.error);
+                    this.handleResult(str, this.circleStyle.error, this.lineStyle.error);
                 }
             }
         } else if (type == 'verificatePsw') {
-            var password = this.handelLocalStorage('get', 'password');
+            var password = this.handleLocalStorage('get', 'password');
             if (this.checkPassWord(password, passwordStr)) {
                 this.chance = 3;
                 var str = '密码正确！';
-                this.handelResult(str, this.circleStyle.correct, this.lineStyle.correct);
+                this.handleResult(str, this.circleStyle.correct, this.lineStyle.correct);
             } else {
                 this.chance--;
                 if (this.chance == 0)
-                    this.countDown(resultDom);
+                    this.countDown(this.resultDom);
                 else {
-                    resultDom.className = 'error';
+                    this.resultDom.className = 'error';
                     var str = '密码不正确,剩' + this.chance + '机会';
-                    this.handelResult(str, this.circleStyle.error, this.lineStyle.error);
+                    this.handleResult(str, this.circleStyle.error, this.lineStyle.error);
                 }
             }
         }
+        this.reset();
+    },
+    /* 
+        parameter:无
+        return: 无
+        function: 处理完密码重置两个点对象数组
+    */
+    reset: function() {
         this.passwordPoint = [];
         this.lastPoint = this.centerPoint.slice(0);
     },
-    handelResult: function(str, circleStyle, lineStyle) {
-        var resultDom = this.getDom('#result');
+    /* 
+         parameter:提示字符串,圆填充样式,线填充样式
+         return: 无
+         function: 对滑动过后相应结果进行处理
+     */
+    handleResult: function(str, circleStyle, lineStyle) {
+
         this.initialCircle();
-        resultDom.innerHTML = str;
+        this.resultDom.innerHTML = str;
         this.drawAcrossCircle(this.passwordPoint, circleStyle);
         this.drawAcrossLine(lineStyle);
         this.timer = setTimeout(function() {
             this.initialCircle()
-        }.bind(this), 5000);
+        }.bind(this), 3000);
 
     },
+    /* 
+         parameter:提示符显示的DOM节点
+         return: 无
+         function: 倒计时
+     */
     countDown: function(resultDom) {
         var n = 5;
         var modeDom = this.getDom('#mode');
@@ -342,7 +501,7 @@ var propertys = {
             resultDom.innerHTML = (n--) + '秒后才能解锁';
             t = setTimeout(arguments.callee, 1000);
             if (n < 0) {
-                resultDom.innerHTML = '请输入手势密码';
+                resultDom.innerHTML = '请验证手势密码';
                 clearTimeout(t);
                 modeDom.style.display = 'none';
 
@@ -351,15 +510,23 @@ var propertys = {
         time();
 
     },
-    //密码点对象转化为密码字符串
-    passwordObjToStr: function() {
+    /* 
+         parameter:密码点对象数组
+         return: 密码点数字字符
+         function: 转换密码点方便使用
+     */
+    passwordObjToStr: function(point) {
         var str = '';
-        this.passwordPoint.forEach(function(item, i) {
+        point.forEach(function(item, i) {
             str += item.index;
         })
         return str;
     },
-    //核对密码
+    /* 
+         parameter:密码1，密码2
+         return: boolean值
+         function: 判断密码是否一致
+     */
     checkPassWord: function(psw1, psw2) {
         return psw1 === psw2;
     }

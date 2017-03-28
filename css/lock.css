@@ -16,9 +16,67 @@
       width: 100vw;
       height: 100vh;
       z-index: 1000;
-      opacity: 0.2;
-      background-color: grey;
+      background-color: rgba(9, 9, 9, 0.2);
       display: none;
+  }
+  
+  #prompt {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: none;
+      background-color: rgba(9, 9, 9, 0.2);
+      width: 100vw;
+      height: 100vh;
+      z-index: 1000;
+  }
+  
+  .prompt-content {
+      position: relative;
+      width: 50vw;
+      height: 20vh;
+      text-align: center;
+      background: #fff;
+      border-radius: 6px;
+      top: 50vh;
+      margin-top: -10vh;
+      margin-left: auto;
+      margin-right: auto;
+      z-index: 1001;
+      font-size: 4.5vw;
+      overflow: hidden;
+  }
+  
+  #title {
+      font-size: 4.5vw;
+      margin: 2vh 0 5vh 0;
+  }
+  
+  button {
+      font-size: 4.5vw;
+      display: inline-block;
+      padding: 1.5vw 3vw;
+      font-weight: 400;
+      line-height: 1.42857143;
+      text-align: center;
+      white-space: nowrap;
+      -ms-touch-action: manipulation;
+      touch-action: manipulation;
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      background-image: none;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      color: #fff;
+      background-color: #337ab7;
+      border-color: #2e6da4;
+  }
+  
+  button:first-child {
+      margin-right: 5vw;
   }
   
   .header {
@@ -28,7 +86,9 @@
       font-size: 6vh;
       text-align: center;
       background-image: -webkit-linear-gradient(left, #c90 0%, #0c3 50%, #c30 100%);
-      border-bottom: 1px solid #999;
+      background-image: -o-linear-gradient(left, #c90 0%, #0c3 50%, #c30 100%);
+      background-image: -moz-linear-gradient(left, #c90 0%, #0c3 50%, #c30 100%);
+      background-image: linear-gradient(left, #c90 0%, #0c3 50%, #c30 100%);
   }
   
   #lock {
@@ -58,6 +118,12 @@
   .radio {
       font-size: 4.5vw;
       margin: 5vh 0 0 12vw;
+  }
+  
+  #repaint {
+      margin-left: 4vw;
+      text-decoration: none;
+      display: none;
   }
   
   @-webkit-keyframes mymove {

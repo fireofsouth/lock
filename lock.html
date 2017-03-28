@@ -9,16 +9,29 @@
 </head>
 
 <body>
+    <!-- 倒计时遮挡层-->
     <div id='mode'>
     </div>
+    <!-- 重新设置密码提示框-->
+    <div id="prompt">
+        <div class="prompt-content">
+            <p id='title'>是否要重新设置密码?</p>
+            <p>
+                <button id='confirm'>确定</button>
+                <button id='cancel'>取消</button>
+            </p>
+        </div>
+    </div>
+    <!-- 标题-->
     <div class="header">手势密码</div>
+    <!-- 解锁主体部分-->
     <div id="lock">
         <canvas id="canvas"></canvas>
         <div id="result">
         </div>
         <div class='radio'>
             <label for="setupPsw">
-                <input type="radio" name="operationType" value='setupPsw'>&nbsp;&nbsp;<span>设置密码</span>
+                <input type="radio" name="operationType" value='setupPsw'>&nbsp;&nbsp;<span>设置密码</span><a href='#' id='repaint'>重绘</a>
             </label>
         </div>
         <div class="radio">
